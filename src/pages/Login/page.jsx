@@ -112,7 +112,7 @@ const page = () => {
                                     <button
                                         className="inline-block shrink-0 rounded-md border border-blue-600 bg-green-medium px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-green-medium focus:outline-none focus:ring active:text-green-medium"
                                     >
-                                        Sing In
+                                        <a href="/analisis" className="text-green-medium underline">Sing in</a>
                                     </button>
                                     <p className="mt-4 text-sm text-gray-500 sm:mt-0">
                                         Ya tienes una cuenta? 
