@@ -1,15 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Pencil, Trash2, X } from 'lucide-react';
+import { useFirebase } from '@/context/FirebaseContext';
 
-// Datos de ejemplo para usuarios
-const initialUsers = [
-  { id: 1, name: 'Ana García', email: 'ana@example.com', lastLogin: '2023-05-15', role: 'Admin' },
-  { id: 2, name: 'Carlos López', email: 'carlos@example.com', lastLogin: '2023-05-14', role: 'Usuario' },
-  { id: 3, name: 'Elena Martínez', email: 'elena@example.com', lastLogin: '2023-05-13', role: 'Usuario' },
-  { id: 4, name: 'David Rodríguez', email: 'david@example.com', lastLogin: '2023-05-12', role: 'Admin' },
-  { id: 5, name: 'Isabel Fernández', email: 'isabel@example.com', lastLogin: '2023-05-11', role: 'Usuario' },
-];
 
 // Datos para las gráficas
 const userRoleData = [
@@ -28,17 +21,26 @@ const userGrowthData = [
 const COLORS = ['#008000', '#4CAF50'];
 
 export default function AdminDashboard() {
-  const [users, setUsers] = useState(initialUsers);
+
+  const [users, setUsers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
 
-  const handleEdit = (user) => {
+  const {getAllUsersInRealTime,deleteUserById,updateUser} = useFirebase();
+
+  const handleEdit =(user) => {
     setEditingUser(user);
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id) => {
-    setUsers(users.filter(user => user.id !== id));
+  const handleDelete =async (id) => {
+    try {
+      await deleteUserById(id);
+      console.log('Usuario eliminado con éxito');
+      // Aquí puedes manejar la UI después de eliminar el usuario
+    } catch (error) {
+      console.error('Error al eliminar el usuario:', error);
+    }
   };
 
   const handleCloseModal = () => {
@@ -46,12 +48,10 @@ export default function AdminDashboard() {
     setEditingUser(null);
   };
 
-  const handleSaveUser = (e) => {
+  const handleSaveUser = async (e) => {
     e.preventDefault();
-    const updatedUsers = users.map(user => 
-      user.id === editingUser.id ? editingUser : user
-    );
-    setUsers(updatedUsers);
+    await updateUser(editingUser.uid,editingUser)
+    console.log(editingUser)
     handleCloseModal();
   };
 
@@ -59,6 +59,20 @@ export default function AdminDashboard() {
     const { name, value } = e.target;
     setEditingUser(prev => ({ ...prev, [name]: value }));
   };
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const users = await getAllUsersInRealTime(setUsers);
+        console.log('Usuarios:', users);
+        // Aquí puedes manejar el estado para mostrar los usuarios en la UI
+      } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+      }
+    };
+
+    fetchUsers();
+  }, [getAllUsersInRealTime]);
 
   return (
     <div className="min-h-screen bg-white p-8">
@@ -115,7 +129,6 @@ export default function AdminDashboard() {
               <tr>
                 <th className="p-3">Nombre</th>
                 <th className="p-3">Email</th>
-                <th className="p-3">Último Login</th>
                 <th className="p-3">Rol</th>
                 <th className="p-3">Acciones</th>
               </tr>
@@ -123,15 +136,14 @@ export default function AdminDashboard() {
             <tbody>
               {users.map((user) => (
                 <tr key={user.id} className="border-b border-gray-100">
-                  <td className="p-3">{user.name}</td>
-                  <td className="p-3">{user.email}</td>
-                  <td className="p-3">{user.lastLogin}</td>
+                  <td className="p-3">{user.nombre}</td>
+                  <td className="p-3">{user.correo}</td>
                   <td className="p-3">{user.role}</td>
                   <td className="p-3">
                     <button onClick={() => handleEdit(user)} className="mr-2 text-[#008000] hover:text-green-700">
                       <Pencil size={18} />
                     </button>
-                    <button onClick={() => handleDelete(user.id)} className="text-red-500 hover:text-red-700">
+                    <button onClick={() => handleDelete(user.uid)} className="text-red-500 hover:text-red-700">
                       <Trash2 size={18} />
                     </button>
                   </td>
@@ -159,18 +171,7 @@ export default function AdminDashboard() {
                   type="text"
                   id="name"
                   name="name"
-                  value={editingUser.name}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#008000] focus:ring focus:ring-[#008000] focus:ring-opacity-50"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={editingUser.email}
+                  value={editingUser.nombre}
                   onChange={handleInputChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#008000] focus:ring focus:ring-[#008000] focus:ring-opacity-50"
                 />

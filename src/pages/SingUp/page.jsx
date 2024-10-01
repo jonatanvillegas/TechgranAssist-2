@@ -1,6 +1,52 @@
-import React from 'react'
+import { useFirebase } from '@/context/FirebaseContext';
+import React, { useState } from 'react';
 
 const page = () => {
+  const [userData, setUserData] = useState({
+    nombre: '',
+    apellido: '',
+    correo: '',
+    contraseña: '',
+    confirmarContraseña: ''
+  });
+  const [error, setError] = useState('');
+  const { register } = useFirebase();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUserData({
+      ...userData,
+      [name]: value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(''); // Resetear el error al enviar el formulario
+    
+    // Validar contraseñas
+    if (userData.contraseña !== userData.confirmarContraseña) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+    
+    // Validar campos vacíos
+    if (Object.values(userData).some((val) => val.trim() === '')) {
+      setError('Por favor, rellena todos los campos');
+      return;
+    }
+
+    try {
+        console.log('esta apunto de la funcion')
+      // Intentar registrar al usuario
+      await register(userData.correo, userData.contraseña, userData.nombre,userData.apellido);
+      console.log('Usuario registrado exitosamente:', userData);
+      setError(''); // Limpiar errores si el registro es exitoso
+    } catch (err) {
+      setError('Error al registrar el usuario. Inténtalo de nuevo');
+      console.error(err); // Manejar el error adecuadamente
+    }
+  };
     return (
 
 
@@ -73,70 +119,81 @@ const page = () => {
                             </p>
                         </div>
                         <div className='p-4 shadow-lg'>
-                        <h2 className='font-bold text-2xl text-green-dark text-center'>Crear Cuenta</h2>
-                            <form action="#" className="mt-8 grid grid-cols-6 gap-6">
-                            
+                            <h2 className='font-bold text-2xl text-green-dark text-center'>Crear Cuenta</h2>
+                            <form onSubmit={handleSubmit} action="#" className="mt-8 grid grid-cols-6 gap-6">
+
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="FirstName" className="block text-sm font-medium text-gray-700">
+                                    <label htmlFor="Nombre" className="block text-sm font-medium text-gray-700">
                                         First Name
                                     </label>
 
                                     <input
                                         type="text"
-                                        id="FirstName"
-                                        name="first_name"
-                                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        id="Nombre"
+                                        name="nombre"
+                                        value={userData.nombre}
+                                        onChange={handleInputChange}
+                                        className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
                                 </div>
 
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="LastName" className="block text-sm font-medium text-gray-700">
+                                    <label htmlFor="Apellido" className="block text-sm font-medium text-gray-700">
                                         Last Name
                                     </label>
 
                                     <input
                                         type="text"
-                                        id="LastName"
-                                        name="last_name"
-                                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        id="Apellido"
+                                        name="apellido"
+                                        value={userData.apellido}
+                                        onChange={handleInputChange}
+                                        className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
                                 </div>
 
                                 <div className="col-span-6">
-                                    <label htmlFor="Email" className="block text-sm font-medium text-gray-700"> Email </label>
+                                    <label htmlFor="Correo" className="block text-sm font-medium text-gray-700"> Email </label>
 
                                     <input
                                         type="email"
-                                        id="Email"
-                                        name="email"
-                                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        id="Correo"
+                                        name="correo"
+                                        value={userData.correo}
+                                        onChange={handleInputChange}
+                                        className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
                                 </div>
 
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="Password" className="block text-sm font-medium text-gray-700"> Password </label>
+                                    <label htmlFor="contraseña" className="block text-sm font-medium text-gray-700"> Password </label>
 
                                     <input
                                         type="password"
-                                        id="Password"
-                                        name="password"
-                                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        id="Contraseña"
+                                        name="contraseña"
+                                        value={userData.contraseña}
+                                        onChange={handleInputChange}
+                                        className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
                                 </div>
 
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="PasswordConfirmation" className="block text-sm font-medium text-gray-700">
+                                    <label htmlFor="ConfirmarContraseña" className="block text-sm font-medium text-gray-700">
                                         Password Confirmation
                                     </label>
 
                                     <input
                                         type="password"
-                                        id="PasswordConfirmation"
-                                        name="password_confirmation"
-                                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        id="ConfirmarContraseña"
+                                        name="confirmarContraseña"
+                                        value={userData.confirmarContraseña}
+                                        onChange={handleInputChange}
+                                        className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
                                 </div>
-
+                                {/* Mensaje de error */}
+                                {error && <p className="text-red-500 mt-2 flex w-full">{error}</p>}
 
                                 <div className="col-span-6">
                                     <p className="text-sm text-gray-500">
@@ -149,13 +206,14 @@ const page = () => {
 
                                 <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                                     <button
+                                        type="submit"
                                         className="inline-block shrink-0 rounded-md border border-gray-600 bg-green-medium px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-green-medium focus:outline-none focus:ring active:text-green-medium"
                                     >
                                         Crear tu cuenta
                                     </button>
 
                                     <p className="mt-4 text-sm text-gray-500 sm:mt-0">
-                                        Ya tienes una cuenta? 
+                                        Ya tienes una cuenta?
                                         <a href="/login" className="text-green-medium underline">Log in</a>.
                                     </p>
                                 </div>

@@ -1,9 +1,48 @@
-import React from 'react'
+import { useFirebase } from '@/context/FirebaseContext';
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+
 
 const page = () => {
+    const [userData, setUserData] = useState({
+        correo: '',
+        contrasena: ''
+    });
+
+    const navigate = useNavigate()
+    // Función para manejar el cambio en los inputs
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setUserData({
+            ...userData,
+            [name]: value
+        });
+    };
+    const { login, getUserData } = useFirebase();
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // Evitar que la página se recargue
+        try {
+            // Llamar a la función login desde tu contexto
+            const user = await login(userData.correo, userData.contrasena);
+            console.log('Usuario autenticado:', user);
+            
+            // Obtener los datos del usuario desde Firestore usando el uid del usuario autenticado
+            const userDataFromFirestore = await getUserData(user.uid);
+            
+            if (userDataFromFirestore && userDataFromFirestore.role === 'Usuario') {
+                navigate('/analisis');
+            } else if (userDataFromFirestore && userDataFromFirestore.role === 'Admin') {
+                navigate('/admin');
+            } else {
+                console.error('Rol de usuario no reconocido.');
+            }
+            
+        } catch (error) {
+            console.error('Error en el inicio de sesión:', error.message);
+            // Muestra un mensaje de error en el frontend si es necesario
+        }
+    };
     return (
-
-
         <section className="bg-white">
             <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
                 <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
@@ -64,7 +103,7 @@ const page = () => {
                             </a>
 
                             <h1 className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
-                                Welcome to Squid 
+                                Welcome to Squid
                             </h1>
 
                             <p className="mt-4 leading-relaxed text-gray-500">
@@ -74,28 +113,32 @@ const page = () => {
                         </div>
                         <div className='p-4 shadow-lg'>
 
-                            <form action="#" className="mt-8 grid grid-cols-6 gap-6">
+                            <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-6 gap-6">
                                 <h2 className='font-bold text-2xl text-green-dark'>Login</h2>
 
                                 <div className="col-span-6">
-                                    <label htmlFor="Email" className="block text-sm font-medium text-gray-700"> Email </label>
+                                    <label htmlFor="Correo" className="block text-sm font-medium text-gray-700"> Email </label>
 
                                     <input
                                         type="email"
-                                        id="Email"
-                                        name="email"
-                                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        id="Correo"
+                                        name="correo"
+                                        value={userData.correo}
+                                        onChange={handleInputChange}
+                                        className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
                                 </div>
 
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="Password" className="block text-sm font-medium text-gray-700"> Password </label>
+                                    <label htmlFor="Contrasena" className="block text-sm font-medium text-gray-700"> Password </label>
 
                                     <input
                                         type="password"
-                                        id="Password"
-                                        name="password"
-                                        className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        id="Contrasena"
+                                        name="contrasena"
+                                        value={userData.contrasena}
+                                        onChange={handleInputChange}
+                                        className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
                                 </div>
 
@@ -110,12 +153,13 @@ const page = () => {
 
                                 <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                                     <button
+                                        type="submit"
                                         className="inline-block shrink-0 rounded-md border border-blue-600 bg-green-medium px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-green-medium focus:outline-none focus:ring active:text-green-medium"
                                     >
-                                        <a href="/analisis" className="text-green-medium underline">Sing in</a>
+                                        Sing in
                                     </button>
                                     <p className="mt-4 text-sm text-gray-500 sm:mt-0">
-                                        Ya tienes una cuenta? 
+                                        Ya tienes una cuenta?
                                         <a href="/singup" className="text-green-medium underline">Crear cuenta</a>.
                                     </p>
                                 </div>
