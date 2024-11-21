@@ -126,7 +126,11 @@ const page = () => {
                             <h2 className='font-bold text-2xl text-green-dark text-center'>Crear Cuenta</h2>
                             <form onSubmit={handleSubmit} action="#" className="mt-8 grid grid-cols-6 gap-6">
 
+                            <h2 className='font-bold text-2xl text-green-dark text-center'>Crear Cuenta</h2>
+                            <form onSubmit={handleSubmit} action="#" className="mt-8 grid grid-cols-6 gap-6">
+
                                 <div className="col-span-6 sm:col-span-3">
+                                    <label htmlFor="Nombre" className="block text-sm font-medium text-gray-700">
                                     <label htmlFor="Nombre" className="block text-sm font-medium text-gray-700">
                                         First Name
                                     </label>
@@ -138,10 +142,16 @@ const page = () => {
                                         value={userData.nombre}
                                         onChange={handleInputChange}
                                         className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        id="Nombre"
+                                        name="nombre"
+                                        value={userData.nombre}
+                                        onChange={handleInputChange}
+                                        className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
                                 </div>
 
                                 <div className="col-span-6 sm:col-span-3">
+                                    <label htmlFor="Apellido" className="block text-sm font-medium text-gray-700">
                                     <label htmlFor="Apellido" className="block text-sm font-medium text-gray-700">
                                         Last Name
                                     </label>
@@ -153,14 +163,25 @@ const page = () => {
                                         value={userData.apellido}
                                         onChange={handleInputChange}
                                         className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        id="Apellido"
+                                        name="apellido"
+                                        value={userData.apellido}
+                                        onChange={handleInputChange}
+                                        className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
                                 </div>
 
                                 <div className="col-span-6">
                                     <label htmlFor="Correo" className="block text-sm font-medium text-gray-700"> Email </label>
+                                    <label htmlFor="Correo" className="block text-sm font-medium text-gray-700"> Email </label>
 
                                     <input
                                         type="email"
+                                        id="Correo"
+                                        name="correo"
+                                        value={userData.correo}
+                                        onChange={handleInputChange}
+                                        className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                         id="Correo"
                                         name="correo"
                                         value={userData.correo}
@@ -171,9 +192,15 @@ const page = () => {
 
                                 <div className="col-span-6 sm:col-span-3">
                                     <label htmlFor="contraseña" className="block text-sm font-medium text-gray-700"> Password </label>
+                                    <label htmlFor="contraseña" className="block text-sm font-medium text-gray-700"> Password </label>
 
                                     <input
                                         type="password"
+                                        id="Contraseña"
+                                        name="contraseña"
+                                        value={userData.contraseña}
+                                        onChange={handleInputChange}
+                                        className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                         id="Contraseña"
                                         name="contraseña"
                                         value={userData.contraseña}
@@ -183,6 +210,7 @@ const page = () => {
                                 </div>
 
                                 <div className="col-span-6 sm:col-span-3">
+                                    <label htmlFor="ConfirmarContraseña" className="block text-sm font-medium text-gray-700">
                                     <label htmlFor="ConfirmarContraseña" className="block text-sm font-medium text-gray-700">
                                         Password Confirmation
                                     </label>
@@ -194,8 +222,15 @@ const page = () => {
                                         value={userData.confirmarContraseña}
                                         onChange={handleInputChange}
                                         className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                                        id="ConfirmarContraseña"
+                                        name="confirmarContraseña"
+                                        value={userData.confirmarContraseña}
+                                        onChange={handleInputChange}
+                                        className="mt-1 w-full rounded-md h-8 border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
                                     />
                                 </div>
+                                {/* Mensaje de error */}
+                                {error && <p className="text-red-500 mt-2 flex w-full">{error}</p>}
                                 {/* Mensaje de error */}
                                 {error && <p className="text-red-500 mt-2 flex w-full">{error}</p>}
 
@@ -211,12 +246,14 @@ const page = () => {
                                 <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                                     <button
                                         type="submit"
+                                        type="submit"
                                         className="inline-block shrink-0 rounded-md border border-gray-600 bg-green-medium px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-green-medium focus:outline-none focus:ring active:text-green-medium"
                                     >
                                         Crear tu cuenta
                                     </button>
 
                                     <p className="mt-4 text-sm text-gray-500 sm:mt-0">
+                                        Ya tienes una cuenta?
                                         Ya tienes una cuenta?
                                         <a href="/login" className="text-green-medium underline">Log in</a>.
                                     </p>
