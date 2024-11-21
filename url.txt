@@ -1,0 +1,13 @@
+// pasos para crear la url 
+
+//1. instalar
+npm install -g localtunnel
+
+//2. aplicar el comando mas el puerto en este caso 5173 
+lt --port 5173 
+
+//3. obtener la url 
+your url is: https://new-walls-taste.loca.lt
+
+//4. obtener la clave para pasar la seguirdad
+https://loca.lt/mytunnelpassword

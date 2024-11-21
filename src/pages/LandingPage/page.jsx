@@ -1,11 +1,15 @@
-import React from 'react'
-import Navbar from './_components/Navbar'
+import React from 'react';
+import Navbar from '@/pages/LandingPage/_components/Navbar';
+import AboutUs from '@/pages/LandingPage/_components/AboutUs';
+import HowItWorks from '@/pages/LandingPage/_components/HowItWorks';
+import TeamMembers from '@/pages/LandingPage/_components/TeamMembers';
+import Footer from './_components/Footer';
 
 const page = () => {
     return (
         <>
-        <Navbar/>
-            <section className="bg-gray-50">
+            <Navbar />
+            <section id="home" className="bg-gray-50">
                 <div className="mx-auto max-w-screen-xl px-4 py-24 lg:flex lg:h-screen lg:items-center">
                     <div className="mx-auto max-w-xl text-center">
                         <h1 className="text-3xl font-extrabold sm:text-5xl">
@@ -29,8 +33,25 @@ const page = () => {
                     </div>
                 </div>
             </section>
-        </>
-    )
-}
 
-export default page
+            {/* Sección About Us */}
+            <section id="about-us">
+                <AboutUs />
+            </section>
+
+            {/* Sección How It Works */}
+            <section id="how-it-works">
+                <HowItWorks />
+            </section>
+
+            {/* Sección Team Members */}
+            <section id="team">
+                <TeamMembers />
+            </section>
+
+            <Footer />
+        </>
+    );
+};
+
+export default page;
