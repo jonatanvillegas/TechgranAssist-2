@@ -13,7 +13,7 @@ function App() {
 
   const isAdmin = currentUser && currentUser?.role === 'Admin'; // Verifica si el usuario es admin
   const isAuthenticated = !!currentUser; // Verifica si el usuario está autenticado
-console.log(currentUser?.role)
+  console.log(currentUser?.role)
   return (
     <>
       <Router>
