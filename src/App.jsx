@@ -5,6 +5,7 @@ import Admin from '@/pages/Admin/page';
 import UploadImage from '@/pages/UploadImage/page';
 import Historial from '@/pages/Historial/page';
 import Resultado from '@/pages/Resultado/page';
+import Climate from '@/pages/Climate/page'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { useFirebase } from './context/FirebaseContext';
 
@@ -36,6 +37,10 @@ function App() {
           <Route 
             path="/resultado" 
             element={isAuthenticated ? <Resultado /> : <Navigate to="/login" />} // Redirige si no está autenticado
+          />
+          <Route 
+            path="/clima" 
+            element={isAuthenticated ? <Climate /> : <Navigate to="/login" />} // Redirige si no está autenticado
           />
         </Routes>
       </Router>

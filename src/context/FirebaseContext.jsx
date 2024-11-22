@@ -120,11 +120,44 @@ export const FirebaseProvider = ({ children }) => {
       throw error;
     }
   };
-
+  const getHistorial = (setHistory) => { 
+    try {
+      const usersCollectionRef = collection(db, 'analisis');
+  
+      // Escuchar los cambios en tiempo real en la colección "users"
+      const unsubscribe = onSnapshot(usersCollectionRef, (querySnapshot) => {
+        const analisis = [];
+        querySnapshot.forEach((doc) => {
+          analisis.push({ id: doc.id, ...doc.data() });
+        });
+  
+        // Actualiza el estado o cualquier otra lógica con la lista de usuarios
+        setHistory(analisis);
+      });
+  
+      // Retorna la función de desuscripción para limpiarla cuando sea necesario
+      return () => unsubscribe();
+    } catch (error) {
+      console.error('Error al obtener usuarios en tiempo real:', error);
+      throw error;
+    }
+  };
   const deleteUserById = async (userId) => {
     try {
       // Eliminar el documento del usuario en Firestore
       const userDocRef = doc(db, 'users', userId);
+      await deleteDoc(userDocRef);
+
+      console.log('Usuario eliminado con éxito');
+    } catch (error) {
+      console.error('Error al eliminar el usuario:', error);
+      throw error; // Lanzar el error para manejarlo más arriba si es necesario
+    }
+  };
+  const deleteAnalisisById = async (Id) => {
+    try {
+      // Eliminar el documento del usuario en Firestore
+      const userDocRef = doc(db, 'analisis', Id);
       await deleteDoc(userDocRef);
 
       console.log('Usuario eliminado con éxito');
@@ -164,7 +197,9 @@ const updateUser = async (uid, updatedData) => {
     getAllUsersInRealTime,
     deleteUserById,
     user,
-    updateUser
+    updateUser,
+    getHistorial,
+    deleteAnalisisById
   };
 
   return (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, Upload, Clock, Settings } from 'lucide-react';
+import { Menu, Upload, Clock, Settings, MountainSnow, LogOut } from 'lucide-react';
 import { useFirebase } from '@/context/FirebaseContext';
 
 const Layout = ({ children }) => {
@@ -33,18 +33,26 @@ const Layout = ({ children }) => {
             Historial de análisis
           </a>
           <a
+            href="/clima"
+            className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-200 transition-colors duration-200"
+          >
+            <MountainSnow className="mr-3 text-green-600" size={20} />
+            Clima
+          </a>
+          <a
             href="#"
             className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-200 transition-colors duration-200"
           >
             <Settings className="mr-3 text-green-600" size={20} />
             Ajustes
           </a>
-          <button
-            className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-200 transition-colors duration-200"
+          <a
+            className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-200 transition-colors duration-200 cursor-pointer"
             onClick={logout}
           >
+            <LogOut className="mr-3 text-green-600" size={20} />
             Deslogueo
-          </button>
+          </a>
         </nav>
       </aside>
 

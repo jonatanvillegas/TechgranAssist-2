@@ -7,6 +7,9 @@ export default {
   ],
   theme: {
   	extend: {
+		dropShadow: {
+			'black': '0 12px 24px rgba(0, 0, 0, 0.75)', // Sombra verde
+		  },
   		colors: {
   			'green-dark': '#006400',
   			'green-medium': '#008000',
@@ -57,7 +60,10 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+		  scrollbar: {
+			thin: 'scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300',
+		},
   	}
   },
   plugins: [require("tailwindcss-animate")],
